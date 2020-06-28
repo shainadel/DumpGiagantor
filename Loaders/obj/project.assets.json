@@ -386,27 +386,29 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\shain\\.nuget\\packages\\": {}
+    "C:\\Users\\FelixF\\.nuget\\packages\\": {},
+    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Work\\SandBox\\InovationWeek3\\Loaders\\Loaders.csproj",
+      "projectUniqueName": "C:\\Users\\FelixF\\source\\repos\\IW3\\Loaders\\Loaders.csproj",
       "projectName": "Loaders",
-      "projectPath": "C:\\Work\\SandBox\\InovationWeek3\\Loaders\\Loaders.csproj",
-      "packagesPath": "C:\\Users\\shain\\.nuget\\packages\\",
-      "outputPath": "C:\\Work\\SandBox\\InovationWeek3\\Loaders\\obj\\",
+      "projectPath": "C:\\Users\\FelixF\\source\\repos\\IW3\\Loaders\\Loaders.csproj",
+      "packagesPath": "C:\\Users\\FelixF\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\FelixF\\source\\repos\\IW3\\Loaders\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+      ],
       "configFilePaths": [
-        "C:\\Users\\shain\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\FelixF\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "netstandard2.0"
       ],
       "sources": {
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "https://api.nuget.org/v3/index.json": {},
         "https://pttfs-app/tfs/DefaultCollection/_packaging/Cellebrite-Debug/nuget/v3/index.json": {},
         "https://pttfs-app/tfs/DefaultCollection/_packaging/Cellebrite-Release/nuget/v3/index.json": {}
       },
