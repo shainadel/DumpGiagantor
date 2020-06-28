@@ -1,6 +1,6 @@
-﻿using Microsoft.Data.Sqlite;
-using System;
+﻿using System.Collections;
 using System.Collections.Generic;
+using Microsoft.Data.Sqlite;
 
 namespace Loaders
 {
@@ -11,11 +11,29 @@ namespace Loaders
             SqliteConnection _SQL = new SqliteConnection(DbPath);
 
             _SQL.Open();
-            
+
             SqliteCommand cmd = new SqliteCommand();
+            // TODO: 
+
         }
 
-    public abstract void PumpTable(RecordManipulationLogic table);
+        public void Parse(IEnumerable<TableRecordManipulationLogic> tablesRecorsdManipulationLogic)
+        {
+            foreach (var tableRecorsdManipulationLogic in tablesRecorsdManipulationLogic)
+            {
+                PumpTable(tableRecorsdManipulationLogic);
+            }
+        }
+
+        public void Parse(TableRecordManipulationLogic tableRecorsdManipulationLogic)
+        {
+            PumpTable(tableRecorsdManipulationLogic);
+        }
+
+        public void PumpTable(TableRecordManipulationLogic tableRecorsdManipulationLogic)
+        {
+            // TODO
+        }
 
     }
 }
