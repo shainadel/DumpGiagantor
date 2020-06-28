@@ -4,12 +4,12 @@ using System.Text;
 
 namespace Loaders
 {
-    public class RecordManipulationLogic
+    public class TableRecordManipulationLogic
     {
         public string TableName;
         public Dictionary<string, Func<string, string>> ManipulationArgs;
 
-        public RecordManipulationLogic(string tableName)
+        public TableRecordManipulationLogic(string tableName)
         {
             TableName = tableName;
             ManipulationArgs = new Dictionary<string, Func<string, string>>();
