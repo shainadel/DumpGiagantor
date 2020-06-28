@@ -1,0 +1,17 @@
+{
+  "version": 2,
+  "dgSpecHash": "Y+nRC0X7ctV50z0/dHSxL2y+K02cN4/LDLqXHIPiwKRKR6W3rWSyNdkLV29TQNo5bUBoEm3oExTX2B6lwciZMg==",
+  "success": true,
+  "projectFilePath": "C:\\Work\\SandBox\\InovationWeek3\\Loaders\\Loaders.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\shain\\.nuget\\packages\\microsoft.data.sqlite.core\\3.1.5\\microsoft.data.sqlite.core.3.1.5.nupkg.sha512",
+    "C:\\Users\\shain\\.nuget\\packages\\microsoft.netcore.platforms\\1.1.0\\microsoft.netcore.platforms.1.1.0.nupkg.sha512",
+    "C:\\Users\\shain\\.nuget\\packages\\netstandard.library\\2.0.3\\netstandard.library.2.0.3.nupkg.sha512",
+    "C:\\Users\\shain\\.nuget\\packages\\sqlitepclraw.core\\2.0.2\\sqlitepclraw.core.2.0.2.nupkg.sha512",
+    "C:\\Users\\shain\\.nuget\\packages\\system.buffers\\4.4.0\\system.buffers.4.4.0.nupkg.sha512",
+    "C:\\Users\\shain\\.nuget\\packages\\system.memory\\4.5.3\\system.memory.4.5.3.nupkg.sha512",
+    "C:\\Users\\shain\\.nuget\\packages\\system.numerics.vectors\\4.4.0\\system.numerics.vectors.4.4.0.nupkg.sha512",
+    "C:\\Users\\shain\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\4.5.2\\system.runtime.compilerservices.unsafe.4.5.2.nupkg.sha512"
+  ],
+  "logs": []
+}

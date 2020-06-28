@@ -1,0 +1,9 @@
+C:\Work\SandBox\InovationWeek3\Loaders\bin\Debug\netstandard2.0\Loaders.deps.json
+C:\Work\SandBox\InovationWeek3\Loaders\bin\Debug\netstandard2.0\Loaders.dll
+C:\Work\SandBox\InovationWeek3\Loaders\obj\Debug\netstandard2.0\Loaders.csprojAssemblyReference.cache
+C:\Work\SandBox\InovationWeek3\Loaders\obj\Debug\netstandard2.0\Loaders.AssemblyInfoInputs.cache
+C:\Work\SandBox\InovationWeek3\Loaders\obj\Debug\netstandard2.0\Loaders.AssemblyInfo.cs
+C:\Work\SandBox\InovationWeek3\Loaders\bin\Debug\netstandard2.0\Loaders.pdb
+C:\Work\SandBox\InovationWeek3\Loaders\obj\Debug\netstandard2.0\Loaders.csproj.CoreCompileInputs.cache
+C:\Work\SandBox\InovationWeek3\Loaders\obj\Debug\netstandard2.0\Loaders.dll
+C:\Work\SandBox\InovationWeek3\Loaders\obj\Debug\netstandard2.0\Loaders.pdb
