@@ -13,7 +13,6 @@ namespace Loaders
             _SQL.Open();
             
             SqliteCommand cmd = new SqliteCommand();
-            //test
         }
 
     public abstract void PumpTable(RecordManipulationLogic table);
