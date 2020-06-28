@@ -12,11 +12,11 @@ namespace Loaders.Apps.Android
         private const string dbPath = @"\\ptnas1\RnD\New_RnD\Insight\Forensic Research Group\Personal\IshayK\IW3\msgstore.db";
 
 
-        public void Init()
+        public AndroidWhatsApp()
         {
-            DbLoader.Init(dbPath);
-
+            base.Init(dbPath);
         }
+
         public override void PumpTable(RecordManipulationLogic table)
         {
             var messagesTableManipulatorLogic = new RecordManipulationLogic("messages");
