@@ -9,22 +9,22 @@ namespace Loaders.Apps.Android
         private const string engValues = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
         private const string dbPath = @"\\ptnas1\RnD\New_RnD\Insight\Forensic Research Group\Personal\IshayK\IW3\msgstore.db";
 
-        private TableRecordManipulationLogic tableRecorsdManipulationLogic;
+        private TableRecordManipulationLogic _tableRecorsdManipulationLogic;
 
         public void Init()
         {
             base.Init(dbPath);
-            tableRecorsdManipulationLogic = GetRecordManipulationLogic();
+            _tableRecorsdManipulationLogic = GetRecordManipulationLogic();
         }
 
         public void Parse()
         {
-            base.Parse(tableRecorsdManipulationLogic);
+            base.Parse(_tableRecorsdManipulationLogic);
         }
 
         private TableRecordManipulationLogic GetRecordManipulationLogic()
         {
-            var messagesTableManipulatorLogic = new TableRecordManipulationLogic("messages");
+            var messagesTableManipulatorLogic = new TableRecordManipulationLogic("messages", intacts: 1, deletedes: 1);
 
             // string
             messagesTableManipulatorLogic.AddManipulationArg("key_id", KeyIdManipulatorFunc);
