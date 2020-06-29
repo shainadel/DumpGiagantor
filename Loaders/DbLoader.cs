@@ -43,6 +43,8 @@ namespace Loaders
 
             foreach (DataRow row in dataTable.Rows)
             {
+                UpdateRecord(dataTable, row, null, cmd);
+                
                 for (int i = 0; i < columnList.Count; i++)
                 {
                     var value = row.ItemArray[i];//GetManipulateValue(row.ItemArray[i], columnList[i].ColumnName);
@@ -124,9 +126,15 @@ namespace Loaders
 
 
         }
-        public void UpdateRecord(List<string> lastRec,TableRecordManipulationLogic logic)
+        public void UpdateRecord(DataTable table, DataRow row,TableRecordManipulationLogic logic, SQLiteCommand cmd )
         {
-
+            cmd.CommandText = 
+                $"CREATE TEMPORARY TABLE NewRecordCreate ENGINE=MEMORY SELECT * FROM {table.TableName} WHERE idx = 15; " +
+                $"UPDATE NewRecordCreate SET idx=21109;" + // Change the unique key
+                // Update anything else that needs to be updated.
+                $"INSERT INTO {table.TableName} SELECT * FROM NewRecordCreate;" +
+                $"DROP TABLE NewRecordCreate;";
+            cmd.ExecuteNonQuery();
         }
     }
 }
