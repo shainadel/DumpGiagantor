@@ -60,6 +60,9 @@ namespace Loaders
             //}
 
 
+        }
+        public void UpdateRecord(List<string> lastRec,TableRecordManipulationLogic logic)
+        {
 
         }
     }
