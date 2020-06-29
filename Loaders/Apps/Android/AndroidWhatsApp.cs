@@ -8,7 +8,7 @@ namespace Loaders.Apps.Android
         private const string hexValues = "0123456789ABCDEF";
         private const string engValues = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
         // private const string dbPath = @"\\ptnas1\RnD\New_RnD\Insight\Forensic Research Group\Personal\IshayK\IW3\msgstore.db";
-       private const string dbPath = @"C:\IW3\dump\Android\WhatsApp\WhatsApp_2.19.360\db\msgstore.db";
+        private const string dbPath = @"C:\IW3\dump\Android\WhatsApp\WhatsApp_2.19.360\db\msgstore.db";
 
         private TableRecordManipulationLogic _tableRecorsdManipulationLogic;
 
