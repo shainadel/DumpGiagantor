@@ -13,7 +13,6 @@ namespace Loaders
             _SQL.Open();
 
             SqliteCommand cmd = new SqliteCommand();
-            // TODO: 
 
         }
 
@@ -32,8 +31,36 @@ namespace Loaders
 
         public void PumpTable(TableRecordManipulationLogic tableRecorsdManipulationLogic)
         {
-            // TODO
-        }
+            int numofIntacts = tableRecorsdManipulationLogic.Intacts;
+            int numofDeletedes = tableRecorsdManipulationLogic.Deletedes;
+            string tableName = tableRecorsdManipulationLogic.TableName;
+            // load the table from DB
 
+            //for (Record rec in table)
+            //{
+            //    //lastRec = rec
+            //    for (int i = 0; i < numofIntacts + numofDeletedes; i++)
+            //    {
+            //        //bool isIntact/isDeleted = //
+            //        // newRec = UpdateRecord(lastRec,tableRecorsdManipulationLogic)
+            //        // Insert to list dbRecords / dbDeletedRecoreds
+            //        // lastRec=newRec
+            //    }
+            //}
+
+            //for (rec in dbRecords)
+            //{
+            //    //add
+            //}
+
+            //for (rec in dbDeletedRecoreds)
+            //{
+            //    //add
+            //    //delete
+            //}
+
+
+
+        }
     }
 }
