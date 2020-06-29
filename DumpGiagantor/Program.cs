@@ -10,6 +10,7 @@ namespace DumpGiagantor
             Console.WriteLine("Hello World!");
             AndroidWhatsApp parser = new AndroidWhatsApp();
             parser.Init();
+            parser.Parse();
 
         }
     }
