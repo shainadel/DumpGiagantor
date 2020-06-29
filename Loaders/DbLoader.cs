@@ -24,54 +24,68 @@ namespace Loaders
             //cmd.Parameters.AddWithValue("@price", 7);
             //cmd.CommandText = @"INSERT INTO cars VALUES(9,'TOYOTA',654)";
             //cmd.CommandText = @"INSERT INTO cars VALUES(79,'TOYOTA4',654)";
+
+            //cmd.CommandText = @"INSERT INTO cars VALUES(@id, @name, @price)";
+            //cmd.Parameters.AddWithValue("@id", 199);
+            //cmd.Parameters.AddWithValue("@name", "KIA");
+            //cmd.Parameters.AddWithValue("@price", 132);
             //cmd.ExecuteNonQuery();
+
             cmd.CommandText = @"SELECT * FROM messages_fts_segdir";
+            //cmd.CommandText = @"SELECT * FROM messages_fts_stat";
+            //cmd.CommandText = @"SELECT * FROM cars";
 
             SQLiteDataReader rdr = cmd.ExecuteReader();
-            //while (rdr.Read())
-            //{
             dataTable.Load(rdr);
-            //Console.WriteLine($"{rdr.GetInt32(0)} {rdr.GetString(1)} {rdr.GetInt32(2)}");
-            //break;
-            //}
 
-            StringBuilder stringRow = new StringBuilder();
-            stringRow.Append($"INSERT INTO {dataTable.TableName} VALUES(");
-
-            bool firstValue = true;
-            var columnList = dataTable.Columns;
+            List<string> columnList = GetColumnList(dataTable.Columns);
+            string cloneQuery = CreateCloneQuery(dataTable.TableName, columnList);
+            cmd.CommandText = cloneQuery;
 
             foreach (DataRow row in dataTable.Rows)
             {
                 for (int i = 0; i < columnList.Count; i++)
                 {
-                    var value = row.ItemArray[i];//GetManipulateValue(row.ItemArray[i], columnList[i].ColumnName);
+                    var value = row.ItemArray[i];
+                    var colName = columnList[i];
 
-                    if (value.GetType().Name == "String")
-                    {
-                        value = $"'{value}'";
-                    }
-                    else if (value.GetType().Name == "Byte[]")
-                    {
+                    cmd.Parameters.AddWithValue(colName, value);
+                }
+                cmd.ExecuteNonQuery();
+            }
+        }
 
-                    }
-                    if (!firstValue)
-                    {
-                        stringRow.Append(",");
-                    }
-                    else
-                    {
-                        firstValue = false;
-                    }
+        private List<string> GetColumnList(DataColumnCollection dataColumnCollection)
+        {
+            var columnList = new List<string>();
+            foreach (var colName in dataColumnCollection)
+            {
+                columnList.Add("@" + colName.ToString());
+            }
 
-                    stringRow.Append($"{value}");
+            return columnList;
+        }
+        private string CreateCloneQuery(string tableName, List<string> columnList)
+        {
+            StringBuilder cloneQuery = new StringBuilder();
+            cloneQuery.Append($"INSERT INTO {tableName} VALUES(");
+            bool firstValue = true;
+            foreach (string colName in columnList)
+            {
+                if (!firstValue)
+                {
+                    cloneQuery.Append(",");
+                }
+                else
+                {
+                    firstValue = false;
                 }
 
-                stringRow.Append(")");
-                string z = stringRow.ToString();
+                cloneQuery.Append(colName);
             }
-            //cmd.ExecuteNonQuery();
 
+            cloneQuery.Append(")");
+            return cloneQuery.ToString();
         }
 
         private object GetManipulateValue(object value, string columnName)
