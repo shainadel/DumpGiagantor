@@ -9,12 +9,13 @@ namespace Loaders
 {
     public abstract class DbLoader
     {
+        private SQLiteCommand _cmd;
+
         public void Init(string DbPath)
         {
             SQLiteConnection connect = new SQLiteConnection(DbPath);
             connect.Open();
-            var cmd = new SQLiteCommand(connect);
-            DataTable dataTable = new DataTable();
+            _cmd = new SQLiteCommand(connect);
 
 
             //cmd.CommandText = @"CREATE TABLE cars(id INTEGER PRIMARY KEY, name TEXT, price INT)";
@@ -31,28 +32,9 @@ namespace Loaders
             //cmd.Parameters.AddWithValue("@price", 132);
             //cmd.ExecuteNonQuery();
 
-            cmd.CommandText = @"SELECT * FROM messages_fts_segdir";
+            //cmd.CommandText = @"SELECT * FROM messages_fts_segdir";
             //cmd.CommandText = @"SELECT * FROM messages_fts_stat";
-            //cmd.CommandText = @"SELECT * FROM cars";
-
-            SQLiteDataReader rdr = cmd.ExecuteReader();
-            dataTable.Load(rdr);
-
-            List<string> columnList = GetColumnList(dataTable.Columns);
-            string cloneQuery = CreateCloneQuery(dataTable.TableName, columnList);
-            cmd.CommandText = cloneQuery;
-
-            foreach (DataRow row in dataTable.Rows)
-            {
-                for (int i = 0; i < columnList.Count; i++)
-                {
-                    var value = row.ItemArray[i];
-                    var colName = columnList[i];
-
-                    cmd.Parameters.AddWithValue(colName, value);
-                }
-                cmd.ExecuteNonQuery();
-            }
+           
         }
 
         private List<string> GetColumnList(DataColumnCollection dataColumnCollection)
@@ -111,6 +93,9 @@ namespace Loaders
             int numofIntacts = tableRecorsdManipulationLogic.Intacts;
             int numofDeletedes = tableRecorsdManipulationLogic.Deletedes;
             string tableName = tableRecorsdManipulationLogic.TableName;
+
+            var manipulationArgsLong = tableRecorsdManipulationLogic.ManipulationArgsLong;
+            var manipulationArgsString = tableRecorsdManipulationLogic.ManipulationArgsString;
             // load the table from DB
 
             //for (Record rec in table)
@@ -136,11 +121,64 @@ namespace Loaders
             //    //delete
             //}
 
+            //_cmd.CommandText = @"SELECT * FROM cars";
+            _cmd.CommandText = $@"SELECT * FROM {tableName}";
+            var dataTable = new DataTable();
 
+            SQLiteDataReader rdr = _cmd.ExecuteReader();
+            dataTable.Load(rdr);
+
+            List<string> columnList = GetColumnList(dataTable.Columns);
+            string cloneQuery = CreateCloneQuery(dataTable.TableName, columnList);
+            _cmd.CommandText = cloneQuery;
+
+            //int j = 10000;
+            Dictionary<string, object> lastRec = new Dictionary<string, object>();
+            foreach (DataRow rec in dataTable.Rows)
+            {
+                var pumpRecord = CreatePumpRecord(rec, columnList);
+
+                for (int k = 0; k < numofIntacts; k++)
+                {
+                    foreach (var colNameValue in pumpRecord)
+                    {
+                        var colName = colNameValue.Key;
+                        var value = colNameValue.Value;
+                        string type = value.GetType().Name;
+
+                        if (type == "Int64" && manipulationArgsLong.ContainsKey(colName))
+                        {
+                            value = manipulationArgsLong[colName](value);
+                        }
+                        else if (type == "String" && manipulationArgsString.ContainsKey(colName))
+                        {
+                            value = manipulationArgsString[colName](value);
+                        }
+
+                        lastRec[colName] = value;
+
+                        _cmd.Parameters.AddWithValue(colName, value);
+                    }
+
+                    pumpRecord = new Dictionary<string, object>(lastRec);
+                    
+                    _cmd.ExecuteNonQuery();
+                }
+
+            }
         }
-        public void UpdateRecord(List<string> lastRec,TableRecordManipulationLogic logic)
-        {
 
+        private Dictionary<string, object> CreatePumpRecord(DataRow rec, List<string> columnList)
+        {
+            var pumpRecord = new Dictionary<string, object>();
+            for (int i = 0; i < columnList.Count; i++)
+            {
+                var colName = columnList[i];
+                var value = rec.ItemArray[i];
+                pumpRecord[colName] = value;
+            }
+
+            return pumpRecord;
         }
     }
 }

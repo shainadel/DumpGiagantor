@@ -2,6 +2,49 @@
 
 namespace Loaders.Apps.Android
 {
+    /*
+    CREATE TABLE messages(_id INTEGER PRIMARY KEY AUTOINCREMENT
+    key_remote_jid TEXT NOT NULL
+    key_from_me INTEGER
+    key_id TEXT NOT NULL
+    status INTEGER
+    needs_push INTEGER
+    data TEXT
+    timestamp INTEGER
+    media_url TEXT
+    media_mime_type TEXT
+    media_wa_type TEXT
+    media_size INTEGER
+    media_name TEXT
+    media_caption TEXT
+    media_hash TEXT
+    media_duration INTEGER
+    origin INTEGER
+    latitude REAL
+    longitude REAL
+    thumb_image TEXT
+    remote_resource TEXT
+    received_timestamp INTEGER
+    send_timestamp INTEGER
+    receipt_server_timestamp INTEGER
+    receipt_device_timestamp INTEGER
+    read_device_timestamp INTEGER
+    played_device_timestamp INTEGER
+    raw_data BLOB
+    recipient_count INTEGER
+    participant_hash TEXT
+    starred INTEGER
+    quoted_row_id INTEGER
+    mentioned_jids TEXT
+    multicast_id TEXT
+    edit_version INTEGER
+    media_enc_hash TEXT
+    payment_transaction_id TEXT
+    forwarded INTEGER
+    preview_type INTEGER
+    send_count INTEGER)
+    */
+
     public class AndroidWhatsApp : DbLoader
     {
         private static Random random = new Random();
@@ -29,39 +72,47 @@ namespace Loaders.Apps.Android
             var messagesTableManipulatorLogic = new TableRecordManipulationLogic("messages", intacts: 1, deletedes: 1);
 
             // string
-            messagesTableManipulatorLogic.AddManipulationArg("key_id", KeyIdManipulatorFunc);
-            messagesTableManipulatorLogic.AddManipulationArg("data", DataManipulatorFunc);
+            messagesTableManipulatorLogic.AddManipulationArg("@key_id", KeyIdManipulatorFunc);
+            messagesTableManipulatorLogic.AddManipulationArg("@data", DataManipulatorFunc);
+            //messagesTableManipulatorLogic.AddManipulationArg("@name", DataManipulatorFunc);
 
-            // int
-            messagesTableManipulatorLogic.AddManipulationArg("_id", IdManipulateFunc);
-            messagesTableManipulatorLogic.AddManipulationArg("timestamp", TimeStampManipulatorFunc);
+            // long
+            messagesTableManipulatorLogic.AddManipulationArg("@_id", IdManipulateFunc);
+            messagesTableManipulatorLogic.AddManipulationArg("@timestamp", TimeStampManipulatorFunc);
+            //messagesTableManipulatorLogic.AddManipulationArg("@id", IdManipulateFunc);
+            //messagesTableManipulatorLogic.AddManipulationArg("@price", TimeStampManipulatorFunc);
+
             return messagesTableManipulatorLogic;
         }
 
-        private string KeyIdManipulatorFunc(string value)
+        private string KeyIdManipulatorFunc(object value)
         {
             if (value == null)
-                return value;
+                return null;
 
-            return RandomString(value.Length, hexValues);
+            string valueString = value.ToString();
+            return RandomString(valueString.Length, hexValues);
         }
 
-        private string DataManipulatorFunc(string value)
+        private string DataManipulatorFunc(object value)
         {
             if (value == null)
-                return value;
+                return null;
 
-            return RandomString(value.Length, engValues);
+            string valueString = value.ToString();
+            return "Random: " + RandomString(valueString.Length, engValues);
         }
 
-        private int IdManipulateFunc(int value)
+        private long IdManipulateFunc(object value)
         {
-            return value + 1000000;
+            long valueInt = (long) value;
+            return valueInt + 620;
         }
 
-        private int TimeStampManipulatorFunc(int value)
+        private long TimeStampManipulatorFunc(object value)
         {
-            return value + random.Next(100);
+            long valueInt = (long)value;
+            return valueInt + random.Next(1000,3000);
         }
 
         private static string RandomString(int length, string chars)
@@ -74,7 +125,5 @@ namespace Loaders.Apps.Android
 
             return new String(stringChars);
         }
-
-
     }
 }
