@@ -8,13 +8,14 @@ namespace Loaders
         public string TableName;
         public int Intacts;
         public int Deletedes;
+        public string PrimaryKey;
         public Dictionary<string, Func<object, string>> ManipulationArgsString;
         public Dictionary<string, Func<object, long>> ManipulationArgsLong;
 
-
-        public TableRecordManipulationLogic(string tableName, int intacts, int deletedes)
+        public TableRecordManipulationLogic(string tableName,string primaryKey, int intacts, int deletedes)
         {
             TableName = tableName;
+            PrimaryKey = primaryKey;
             Intacts = intacts;
             Deletedes = deletedes;
             ManipulationArgsString = new Dictionary<string, Func<object, string>>();

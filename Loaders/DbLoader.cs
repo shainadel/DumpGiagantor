@@ -140,14 +140,20 @@ namespace Loaders
 
         public void PumpTable(TableRecordManipulationLogic tableRecorsdManipulationLogic)
         {
-            int numofIntacts = tableRecorsdManipulationLogic.Intacts;
-            int numofDeletedes = tableRecorsdManipulationLogic.Deletedes;
+            int numofIntactsPerRecord = tableRecorsdManipulationLogic.Intacts;
+            int numofDeletedesPerRecord = tableRecorsdManipulationLogic.Deletedes;
             string tableName = tableRecorsdManipulationLogic.TableName;
+            string primaryKey = tableRecorsdManipulationLogic.PrimaryKey;
 
             var manipulationArgsLong = tableRecorsdManipulationLogic.ManipulationArgsLong;
             var manipulationArgsString = tableRecorsdManipulationLogic.ManipulationArgsString;
 
-            //_cmd.CommandText = @"SELECT * FROM cars";
+
+            //_cmd.CommandText =;
+
+
+            long maxValuePrimaryKey = 1 + GetMaxValuePrimaryKey(tableName, primaryKey);
+
             _cmd.CommandText = $@"SELECT * FROM {tableName}";
             var dataTable = new DataTable();
 
@@ -158,13 +164,16 @@ namespace Loaders
             string cloneQuery = CreateCloneQuery(dataTable.TableName, columnList);
             _cmd.CommandText = cloneQuery;
 
-            //int j = 10000;
+            long numofDeletedes = numofDeletedesPerRecord * dataTable.Rows.Count;
+
             Dictionary<string, object> lastRec = new Dictionary<string, object>();
+            List<long> deletedPrimaryKeys = new List<long>();
+
             foreach (DataRow rec in dataTable.Rows)
             {
                 var pumpRecord = CreatePumpRecord(rec, columnList);
 
-                for (int k = 0; k < numofIntacts; k++)
+                for (int k = 0; k < numofIntactsPerRecord + numofDeletedesPerRecord; k++)
                 {
                     foreach (var colNameValue in pumpRecord)
                     {
@@ -172,7 +181,13 @@ namespace Loaders
                         var value = colNameValue.Value;
                         string type = value.GetType().Name;
 
-                        if (type == "Int64" && manipulationArgsLong.ContainsKey(colName))
+                        if (colName == "@"+primaryKey)
+                        {
+                            value = maxValuePrimaryKey++;
+                            if(k>=numofIntactsPerRecord)
+                                deletedPrimaryKeys.Add((long)value);
+                        }
+                        else if (type == "Int64" && manipulationArgsLong.ContainsKey(colName))
                         {
                             value = manipulationArgsLong[colName](value);
                         }
@@ -187,11 +202,27 @@ namespace Loaders
                     }
 
                     pumpRecord = new Dictionary<string, object>(lastRec);
-                    
                     _cmd.ExecuteNonQuery();
                 }
 
+
             }
+            foreach (long key in deletedPrimaryKeys)
+            {
+                _cmd.CommandText = $@"delete from {tableName} where {primaryKey} = {key}";
+                _cmd.ExecuteNonQuery();
+            }
+        }
+
+        private long GetMaxValuePrimaryKey(string tableName, string primaryKey)
+        {
+            _cmd.CommandText = $@"SELECT MAX({primaryKey}) FROM {tableName}";
+
+            var dataTable = new DataTable();
+            SQLiteDataReader rdrMaxValue = _cmd.ExecuteReader();
+            dataTable.Load(rdrMaxValue);
+            var maxValue = dataTable.Rows[0].ItemArray[0];
+            return (long)maxValue;
         }
 
         private Dictionary<string, object> CreatePumpRecord(DataRow rec, List<string> columnList)
