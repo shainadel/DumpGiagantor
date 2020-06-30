@@ -11,6 +11,7 @@ namespace Loaders
         public Dictionary<string, Func<object, string>> ManipulationArgsString;
         public Dictionary<string, Func<object, long>> ManipulationArgsLong;
 
+
         public TableRecordManipulationLogic(string tableName, int intacts, int deletedes)
         {
             TableName = tableName;
@@ -18,6 +19,7 @@ namespace Loaders
             Deletedes = deletedes;
             ManipulationArgsString = new Dictionary<string, Func<object, string>>();
             ManipulationArgsLong = new Dictionary<string, Func<object, long>>();
+
         }
 
         public void AddManipulationArg(string columnNamne, Func<object,string> ManipulationFunc)
