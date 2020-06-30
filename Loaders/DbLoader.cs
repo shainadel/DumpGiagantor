@@ -3,19 +3,46 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SQLite;
+using System.IO;
+using System.IO.Compression;
 using System.Text;
 
 namespace Loaders
 {
     public abstract class DbLoader
     {
+        SQLiteConnection _connection;
         private SQLiteCommand _cmd;
-
-        public void Init(string DbPath)
+        protected string _DBPathInsideZip;
+        protected string _zipPath;
+        private string _DBName;
+        private string _DBPathInDisk;
+        private FileStream _fileStream;
+        public void Init()
         {
-            SQLiteConnection connect = new SQLiteConnection(DbPath);
-            connect.Open();
-            _cmd = new SQLiteCommand(connect);
+            if (_zipPath != null)
+            {
+                using (ZipArchive archive = ZipFile.Open(_zipPath, ZipArchiveMode.Update))
+                {
+                    ZipArchiveEntry entry = archive.GetEntry(_DBPathInsideZip);
+                    _DBName = entry.Name;
+                    _DBPathInDisk = $"C:\\{_DBName}";
+                    var stream = entry.Open();
+                    //_fileStream = File.Open(_DBPathInDisk, FileMode.OpenOrCreate, FileAccess.ReadWrite,
+                    //    FileShare.ReadWrite);
+                    using (_fileStream = File.Create(_DBPathInDisk))
+                    {
+                        stream.Seek(0, SeekOrigin.Begin);
+                        stream.CopyTo(_fileStream);
+                    }
+
+                    stream.Close();
+                }
+            }
+            
+            _connection = new SQLiteConnection($"Data Source={_DBPathInDisk};");
+            _connection.Open();
+            _cmd = new SQLiteCommand(_connection);
 
 
             //cmd.CommandText = @"CREATE TABLE cars(id INTEGER PRIMARY KEY, name TEXT, price INT)";
@@ -86,6 +113,21 @@ namespace Loaders
         public void Parse(TableRecordManipulationLogic tableRecorsdManipulationLogic)
         {
             PumpTable(tableRecorsdManipulationLogic);
+            if(_zipPath != null)
+                using (ZipArchive archive = ZipFile.Open(_zipPath, ZipArchiveMode.Update))
+                {
+                    ZipArchiveEntry entry = archive.GetEntry(_DBPathInsideZip);
+                    entry.Delete();
+                    try
+                    {
+                        archive.CreateEntryFromFile(_DBPathInDisk, _DBPathInsideZip, CompressionLevel.NoCompression);
+                        File.Delete(_DBPathInDisk);
+                    }
+                    catch (Exception e)
+                    {
+                        System.Threading.Thread.Sleep(1000);
+                    }
+                }
         }
 
         public void PumpTable(TableRecordManipulationLogic tableRecorsdManipulationLogic)
@@ -162,6 +204,8 @@ namespace Loaders
                 _cmd.CommandText = $@"delete from {tableName} where {primaryKey} = {key}";
                 _cmd.ExecuteNonQuery();
             }
+            _cmd.Dispose();
+            _connection.Close();
         }
 
         private long GetMaxValuePrimaryKey(string tableName, string primaryKey)

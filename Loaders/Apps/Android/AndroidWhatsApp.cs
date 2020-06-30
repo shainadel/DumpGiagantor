@@ -50,15 +50,14 @@ namespace Loaders.Apps.Android
         private static Random random = new Random();
         private const string hexValues = "0123456789ABCDEF";
         private const string engValues = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-        // private const string dbPath = @"\\ptnas1\RnD\New_RnD\Insight\Forensic Research Group\Personal\IshayK\IW3\msgstore.db";
-       private const string dbPath = @"Data Source=C:\IW3\dumps\Android\WhatsApp\WhatsApp_2.19.360\db\msgstore.db;";
-
-
         private TableRecordManipulationLogic _tableRecorsdManipulationLogic;
 
         public void Init()
         {
-            base.Init(dbPath);
+            _zipPath = @"C:\IW3\dumps\Android\WhatsApp\WhatsApp_2.19.360\WhatsApp_2.19.360_Android_7.0.zip";
+            _DBPathInsideZip = @"Root/data/com.whatsapp/databases/msgstore.db";
+            //_DBPathInDisk = PUT YOUR LOCAL PATH HERE IF YOU'RE NOT WORKING WITH ZIP AND COMMENT THE 2 LINES ABOVE
+            base.Init();
             _tableRecorsdManipulationLogic = GetRecordManipulationLogic();
         }
 
