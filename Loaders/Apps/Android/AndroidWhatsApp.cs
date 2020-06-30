@@ -68,7 +68,7 @@ namespace Loaders.Apps.Android
 
         private TableRecordManipulationLogic GetRecordManipulationLogic()
         {
-            var messagesTableManipulatorLogic = new TableRecordManipulationLogic("messages", intacts: 1, deletedes: 1);
+            var messagesTableManipulatorLogic = new TableRecordManipulationLogic("messages", "_id", intacts: 500, deletedes: 1);
 
             // string
             messagesTableManipulatorLogic.AddManipulationArg("@key_id", KeyIdManipulatorFunc);
@@ -76,7 +76,7 @@ namespace Loaders.Apps.Android
             //messagesTableManipulatorLogic.AddManipulationArg("@name", DataManipulatorFunc);
 
             // long
-            messagesTableManipulatorLogic.AddManipulationArg("@_id", IdManipulateFunc);
+            //messagesTableManipulatorLogic.AddManipulationArg("@_id", IdManipulateFunc);
             messagesTableManipulatorLogic.AddManipulationArg("@timestamp", TimeStampManipulatorFunc);
             //messagesTableManipulatorLogic.AddManipulationArg("@id", IdManipulateFunc);
             //messagesTableManipulatorLogic.AddManipulationArg("@price", TimeStampManipulatorFunc);
@@ -90,7 +90,8 @@ namespace Loaders.Apps.Android
                 return null;
 
             string valueString = value.ToString();
-            return RandomString(valueString.Length, hexValues);
+            int length = valueString.Length > 16 ? valueString.Length : 16;
+            return RandomString(length, hexValues);
         }
 
         private string DataManipulatorFunc(object value)
@@ -111,7 +112,7 @@ namespace Loaders.Apps.Android
         private long TimeStampManipulatorFunc(object value)
         {
             long valueInt = (long)value;
-            return valueInt + random.Next(1000,3000);
+            return valueInt + random.Next(2000,15000);
         }
 
         private static string RandomString(int length, string chars)
