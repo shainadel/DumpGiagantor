@@ -8,10 +8,9 @@ namespace DumpGiagantor
         static void Main(string[] args)
         {
             Console.WriteLine("Hello World!");
-            Tango parser = new Tango();
+            AndroidWhatsApp parser = new AndroidWhatsApp();
             parser.Init();
             parser.Parse();
-
         }
     }
 }
