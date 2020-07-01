@@ -6,7 +6,6 @@ using System.Data.SQLite;
 using System.IO;
 using System.IO.Compression;
 using System.Text;
-
 namespace Loaders
 {
     public abstract class DbLoader
@@ -48,7 +47,6 @@ namespace Loaders
             //_cmd = new SQLiteCommand(_connection);
             _cmd = new SQLiteCommand(_memoryConnection);
         }
-
         private List<string> GetColumnList(DataColumnCollection dataColumnCollection)
         {
             var columnList = new List<string>();
@@ -81,12 +79,10 @@ namespace Loaders
             cloneQuery.Append(")");
             return cloneQuery.ToString();
         }
-
         private object GetManipulateValue(object value, string columnName)
         {
             return value;
         }
-
         public void Parse(IEnumerable<TableRecordManipulationLogic> tablesRecorsdManipulationLogic)
         {
             foreach (var tableRecorsdManipulationLogic in tablesRecorsdManipulationLogic)
@@ -94,7 +90,6 @@ namespace Loaders
                 PumpTable(tableRecorsdManipulationLogic);
             }
         }
-
         public void Parse(TableRecordManipulationLogic tableRecorsdManipulationLogic)
         {
             PumpTable(tableRecorsdManipulationLogic);
@@ -114,38 +109,25 @@ namespace Loaders
                     }
                 }
         }
-
         public void PumpTable(TableRecordManipulationLogic tableRecorsdManipulationLogic)
         {
             int numofIntactsPerRecord = tableRecorsdManipulationLogic.Intacts;
             int numofDeletedesPerRecord = tableRecorsdManipulationLogic.Deletedes;
             string tableName = tableRecorsdManipulationLogic.TableName;
             string primaryKey = tableRecorsdManipulationLogic.PrimaryKey;
-
             var manipulationArgsLong = tableRecorsdManipulationLogic.ManipulationArgsLong;
             var manipulationArgsString = tableRecorsdManipulationLogic.ManipulationArgsString;
-
-
-            //_cmd.CommandText =;
-
-
             long maxValuePrimaryKey = 1 + GetMaxValuePrimaryKey(tableName, primaryKey);
-
             _cmd.CommandText = $@"SELECT * FROM {tableName}";
             var dataTable = new DataTable();
-
             SQLiteDataReader rdr = _cmd.ExecuteReader();
             dataTable.Load(rdr);
-
             List<string> columnList = GetColumnList(dataTable.Columns);
             string cloneQuery = CreateCloneQuery(dataTable.TableName, columnList);
             _cmd.CommandText = cloneQuery;
-
             long numofDeletedes = numofDeletedesPerRecord * dataTable.Rows.Count;
-
             Dictionary<string, object> lastRec = new Dictionary<string, object>();
             List<long> deletedPrimaryKeys = new List<long>();
-
             foreach (DataRow rec in dataTable.Rows)
             {
                 var pumpRecord = CreatePumpRecord(rec, columnList);
@@ -188,8 +170,6 @@ namespace Loaders
                         Console.WriteLine(e);
                     }
                 }
-
-
             }
             foreach (long key in deletedPrimaryKeys)
             {
@@ -197,14 +177,13 @@ namespace Loaders
                 _cmd.ExecuteNonQuery();
             }
             _cmd.Dispose();
-            //_connection.Close();
-            
+            //_connection.Close();            
             _connection.Open();
             // save memory db to file
             _memoryConnection.BackupDatabase(_connection, "main", "main", -1, null, 0);
             _memoryConnection.Close();
+            _connection.Close();
         }
-
         private long GetMaxValuePrimaryKey(string tableName, string primaryKey)
         {
             _cmd.CommandText = $@"SELECT MAX({primaryKey}) FROM {tableName}";
@@ -215,7 +194,6 @@ namespace Loaders
             var maxValue = dataTable.Rows[0].ItemArray[0];
             return (long)maxValue;
         }
-
         private Dictionary<string, object> CreatePumpRecord(DataRow rec, List<string> columnList)
         {
             var pumpRecord = new Dictionary<string, object>();
