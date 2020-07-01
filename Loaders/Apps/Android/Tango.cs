@@ -45,7 +45,7 @@ namespace Loaders.Apps.Android
     send_count INTEGER)
     */
 
-    public class AndroidWhatsApp : DbLoader
+    public class Tango : DbLoader
     {
         private static Random random = new Random();
         private const string hexValues = "0123456789ABCDEF";
@@ -56,7 +56,7 @@ namespace Loaders.Apps.Android
         {
             //_zipPath = @"C:\IW3\dumps\Android\WhatsApp\WhatsApp_2.19.360\WhatsApp_2.19.360_Android_7.0.zip";
             //_DBPathInsideZip = @"Root/data/com.whatsapp/databases/msgstore.db";
-            _DBPathInDisk = @"C:\IW3\dumps\Android\WhatsApp\WhatsApp_2.19.360\msgstore.db";
+            _DBPathInDisk = @"C:\IW3\dumps\Android\Tango_6.11.237500\tc.db";
             base.Init();
             _tableRecorsdManipulationLogic = GetRecordManipulationLogic();
         }
@@ -68,23 +68,29 @@ namespace Loaders.Apps.Android
 
         private TableRecordManipulationLogic GetRecordManipulationLogic()
         {
-            var messagesTableManipulatorLogic = new TableRecordManipulationLogic("messages", "_id", intacts: 500, deletedes: 1);
+            var messagesTableManipulatorLogic = new TableRecordManipulationLogic("messages", "msg_id", intacts: 540, deletedes: 1);
 
             // string
-            messagesTableManipulatorLogic.AddManipulationArg("@key_id", KeyIdManipulatorFunc);
-            messagesTableManipulatorLogic.AddManipulationArg("@data", DataManipulatorFunc);
+            messagesTableManipulatorLogic.AddManipulationArg("@conv_id", RandomStringOrSame);
             //messagesTableManipulatorLogic.AddManipulationArg("@name", DataManipulatorFunc);
 
             // long
-            //messagesTableManipulatorLogic.AddManipulationArg("@_id", IdManipulateFunc);
-            messagesTableManipulatorLogic.AddManipulationArg("@timestamp", TimeStampManipulatorFunc);
-            //messagesTableManipulatorLogic.AddManipulationArg("@id", IdManipulateFunc);
+            messagesTableManipulatorLogic.AddManipulationArg("@type", RandomLong);
+            messagesTableManipulatorLogic.AddManipulationArg("@create_time", TimeStampManipulatorFunc);
             //messagesTableManipulatorLogic.AddManipulationArg("@price", TimeStampManipulatorFunc);
 
             return messagesTableManipulatorLogic;
         }
 
-        private string KeyIdManipulatorFunc(object value)
+        private string RandomStringOrSame(object value)
+        {
+            var i = random.Next(0, 999);
+            if (i != 5)
+                return value.ToString();
+            return MediaIdManipulatorFunc(value);
+        }
+
+        private string MediaIdManipulatorFunc(object value)
         {
             if (value == null)
                 return null;
@@ -105,14 +111,14 @@ namespace Loaders.Apps.Android
 
         private long IdManipulateFunc(object value)
         {
-            long valueInt = (long) value;
+            long valueInt = (long)value;
             return valueInt + 620;
         }
 
         private long TimeStampManipulatorFunc(object value)
         {
             long valueInt = (long)value;
-            return valueInt + random.Next(2000,15000);
+            return valueInt + random.Next(-15000, 15000);
         }
 
         private static string RandomString(int length, string chars)
@@ -124,6 +130,11 @@ namespace Loaders.Apps.Android
             }
 
             return new String(stringChars);
+        }
+
+        private long RandomLong(object value)
+        {
+            return random.Next(100);
         }
     }
 }

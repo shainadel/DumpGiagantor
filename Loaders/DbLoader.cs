@@ -12,11 +12,12 @@ namespace Loaders
     public abstract class DbLoader
     {
         SQLiteConnection _connection;
+        private SQLiteConnection _memoryConnection;
         private SQLiteCommand _cmd;
         protected string _DBPathInsideZip;
         protected string _zipPath;
         private string _DBName;
-        private string _DBPathInDisk;
+        protected string _DBPathInDisk;
         private FileStream _fileStream;
         public void Init()
         {
@@ -28,8 +29,6 @@ namespace Loaders
                     _DBName = entry.Name;
                     _DBPathInDisk = $"C:\\{_DBName}";
                     var stream = entry.Open();
-                    //_fileStream = File.Open(_DBPathInDisk, FileMode.OpenOrCreate, FileAccess.ReadWrite,
-                    //    FileShare.ReadWrite);
                     using (_fileStream = File.Create(_DBPathInDisk))
                     {
                         stream.Seek(0, SeekOrigin.Begin);
@@ -39,29 +38,15 @@ namespace Loaders
                     stream.Close();
                 }
             }
-            
+
+            _memoryConnection = new SQLiteConnection("Data Source=:memory:");
             _connection = new SQLiteConnection($"Data Source={_DBPathInDisk};");
+            _memoryConnection.Open();
             _connection.Open();
-            _cmd = new SQLiteCommand(_connection);
-
-
-            //cmd.CommandText = @"CREATE TABLE cars(id INTEGER PRIMARY KEY, name TEXT, price INT)";
-            //cmd.CommandText = @"INSERT INTO cars(name, price) VALUES('Audi', 52642)";
-            //cmd.CommandText = @"INSERT INTO cars(name, price) VALUES(@name,@price)";
-            //cmd.Parameters.AddWithValue("@name", "BMW");
-            //cmd.Parameters.AddWithValue("@price", 7);
-            //cmd.CommandText = @"INSERT INTO cars VALUES(9,'TOYOTA',654)";
-            //cmd.CommandText = @"INSERT INTO cars VALUES(79,'TOYOTA4',654)";
-
-            //cmd.CommandText = @"INSERT INTO cars VALUES(@id, @name, @price)";
-            //cmd.Parameters.AddWithValue("@id", 199);
-            //cmd.Parameters.AddWithValue("@name", "KIA");
-            //cmd.Parameters.AddWithValue("@price", 132);
-            //cmd.ExecuteNonQuery();
-
-            //cmd.CommandText = @"SELECT * FROM messages_fts_segdir";
-            //cmd.CommandText = @"SELECT * FROM messages_fts_stat";
-           
+            _connection.BackupDatabase(_memoryConnection, "main", "main", -1, null, 0);
+            _connection.Close();
+            //_cmd = new SQLiteCommand(_connection);
+            _cmd = new SQLiteCommand(_memoryConnection);
         }
 
         private List<string> GetColumnList(DataColumnCollection dataColumnCollection)
@@ -194,7 +179,14 @@ namespace Loaders
                     }
 
                     pumpRecord = new Dictionary<string, object>(lastRec);
-                    _cmd.ExecuteNonQuery();
+                    try
+                    {
+                        _cmd.ExecuteNonQuery();
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e);
+                    }
                 }
 
 
@@ -205,7 +197,12 @@ namespace Loaders
                 _cmd.ExecuteNonQuery();
             }
             _cmd.Dispose();
-            _connection.Close();
+            //_connection.Close();
+            
+            _connection.Open();
+            // save memory db to file
+            _memoryConnection.BackupDatabase(_connection, "main", "main", -1, null, 0);
+            _memoryConnection.Close();
         }
 
         private long GetMaxValuePrimaryKey(string tableName, string primaryKey)
