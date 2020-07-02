@@ -263,7 +263,7 @@ namespace Loaders
             return GetRandomHexString(value);
         }
 
-        private static string RandomString(int length, string chars)
+        protected static string RandomString(int length, string chars)
         {
             var stringChars = new char[length];
             for (int i = 0; i < stringChars.Length; i++)
