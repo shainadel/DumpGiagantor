@@ -7,11 +7,14 @@ namespace DumpGiagantor
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            Console.Title = "Dump Giagantor";
+            Console.WriteLine("Get Ready to Increase you PA Application Dump");
 
             AndroidWhatsApp parser = new AndroidWhatsApp();
             //AndroidICQ parser = new AndroidICQ();
             //AndroidTwitter parser = new AndroidTwitter();
+            //AndroidTango parser = new AndroidTango();
+            //AndroidWeChat parser = new AndroidWeChat();
             //AndroidFacebookMessanger parser = new AndroidFacebookMessanger();
             parser.Init();
             parser.Parse();
