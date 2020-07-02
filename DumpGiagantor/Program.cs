@@ -12,6 +12,7 @@ namespace DumpGiagantor
             AndroidWhatsApp parser = new AndroidWhatsApp();
             //AndroidICQ parser = new AndroidICQ();
             //AndroidTwitter parser = new AndroidTwitter();
+            //AndroidFacebookMessanger parser = new AndroidFacebookMessanger();
             parser.Init();
             parser.Parse();
         }
