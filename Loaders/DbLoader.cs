@@ -10,6 +10,10 @@ namespace Loaders
 {
     public abstract class DbLoader
     {
+        private static Random random = new Random();
+        private const string hexValues = "0123456789ABCDEF";
+        private const string engValues = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
         SQLiteConnection _connection;
         private SQLiteConnection _memoryConnection;
         private SQLiteCommand _cmd;
@@ -205,6 +209,69 @@ namespace Loaders
             }
 
             return pumpRecord;
+        }
+
+
+
+        // Manipulation functions
+
+        // long
+        protected long GetRandomTimeStamp(object value)
+        {
+            long valueInt = (long)value;
+            return valueInt + random.Next(-15000, 15000);
+        }
+
+        protected long GetRandomSuccessiveId(object value)
+        {
+            long valueInt = (long)value;
+            return valueInt + random.Next(200000, 1500000);
+        }
+
+        protected long GetRandomLong(object value)
+        {
+            return random.Next(100);
+        }
+
+
+        // string
+        protected string GetRandomString(object value)
+        {
+            if (value == null)
+                return null;
+
+            string valueString = value.ToString();
+            int stringLength = valueString.Length > 16 ? valueString.Length : 16;
+            return "Random: " + RandomString(stringLength, engValues);
+        }
+
+        protected string GetRandomHexString(object value)
+        {
+            if (value == null)
+                return null;
+
+            string valueString = value.ToString();
+            int stringLength = valueString.Length > 16 ? valueString.Length : 16;
+            return RandomString(stringLength, hexValues);
+        }
+
+        protected string GetRandomStringOrSame(object value)
+        {
+            var i = random.Next(0, 999);
+            if (i != 5)
+                return value.ToString();
+            return GetRandomHexString(value);
+        }
+
+        private static string RandomString(int length, string chars)
+        {
+            var stringChars = new char[length];
+            for (int i = 0; i < stringChars.Length; i++)
+            {
+                stringChars[i] = chars[random.Next(chars.Length)];
+            }
+
+            return new String(stringChars);
         }
     }
 }
