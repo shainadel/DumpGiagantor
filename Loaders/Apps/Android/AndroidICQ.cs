@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Loaders.Apps.Android
+﻿namespace Loaders.Apps.Android
 { 
     /* CREATE TABLE 'MESSAGE_DATA' (
     '_id' INTEGER PRIMARY KEY AUTOINCREMENT 
@@ -32,10 +28,6 @@ namespace Loaders.Apps.Android
     */
     public class AndroidICQ: DbLoader
     {
-         
-        private static Random random = new Random();
-        private const string hexValues = "0123456789ABCDEF";
-        private const string engValues = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
         private TableRecordManipulationLogic _tableRecorsdManipulationLogic;
 
         public void Init()
@@ -60,61 +52,14 @@ namespace Loaders.Apps.Android
             var messagesTableManipulatorLogic = new TableRecordManipulationLogic("MESSAGE_DATA", "_id", intacts: 1500, deletedes: 1);
 
             // string
-            messagesTableManipulatorLogic.AddManipulationArg("@CONTENT", BodyManipulatorFunc);
+            messagesTableManipulatorLogic.AddManipulationArg("@CONTENT", GetRandomString);
 
             // long
-            messagesTableManipulatorLogic.AddManipulationArg("@TIMESTAMP", TimeStampManipulatorFunc);
-            messagesTableManipulatorLogic.AddManipulationArg("@REQ_ID", ReqIdManipulatorFunc);
-            messagesTableManipulatorLogic.AddManipulationArg("@HISTORY_ID", TimeStampManipulatorFunc);
+            messagesTableManipulatorLogic.AddManipulationArg("@TIMESTAMP", GetRandomTimeStamp);
+            messagesTableManipulatorLogic.AddManipulationArg("@REQ_ID", GetRandomSuccessiveId);
+            messagesTableManipulatorLogic.AddManipulationArg("@HISTORY_ID", GetRandomTimeStamp);
 
             return messagesTableManipulatorLogic;
-        }
-
-        private string KeyIdManipulatorFunc(object value)
-        {
-            if (value == null)
-                return null;
-
-            string valueString = value.ToString();
-            int length = valueString.Length > 16 ? valueString.Length : 16;
-            return RandomString(length, hexValues);
-        }
-
-        private string BodyManipulatorFunc(object value)
-        {
-            if (value == null)
-                return null;
-
-            string valueString = value.ToString();
-            return "Random: " + RandomString(valueString.Length, engValues);
-        }
-
-        //private long IdManipulateFunc(object value)
-        //{
-        //    long valueInt = (long) value;
-        //    return valueInt + 620;
-        //}
-
-        private long TimeStampManipulatorFunc(object value)
-        {
-            long valueInt = (long)value;
-            return valueInt + random.Next(-15000, 15000);
-        }
-        private long ReqIdManipulatorFunc(object value)
-        {
-            long valueInt = (long)value;
-            return valueInt + random.Next(200000, 1500000);
-        }
-
-        private static string RandomString(int length, string chars)
-        {
-            var stringChars = new char[length];
-            for (int i = 0; i < stringChars.Length; i++)
-            {
-                stringChars[i] = chars[random.Next(chars.Length)];
-            }
-
-            return new String(stringChars);
         }
     }
 }

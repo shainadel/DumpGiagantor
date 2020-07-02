@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Loaders.Apps.Android
+﻿namespace Loaders.Apps.Android
 {
     /*
     CREATE TABLE messages(_id INTEGER PRIMARY KEY AUTOINCREMENT
@@ -47,9 +45,6 @@ namespace Loaders.Apps.Android
 
     public class AndroidWhatsApp : DbLoader
     {
-        private static Random random = new Random();
-        private const string hexValues = "0123456789ABCDEF";
-        private const string engValues = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
         private TableRecordManipulationLogic _tableRecorsdManipulationLogic;
 
         public void Init()
@@ -69,62 +64,17 @@ namespace Loaders.Apps.Android
 
         private TableRecordManipulationLogic GetRecordManipulationLogic()
         {
-            var messagesTableManipulatorLogic = new TableRecordManipulationLogic("messages", "_id", intacts: 500, deletedes: 1);
+            var messagesTableManipulatorLogic =
+                new TableRecordManipulationLogic("messages", "_id", intacts: 500, deletedes: 1);
 
             // string
-            messagesTableManipulatorLogic.AddManipulationArg("@key_id", KeyIdManipulatorFunc);
-            messagesTableManipulatorLogic.AddManipulationArg("@data", DataManipulatorFunc);
-            //messagesTableManipulatorLogic.AddManipulationArg("@name", DataManipulatorFunc);
+            messagesTableManipulatorLogic.AddManipulationArg("@key_id", GetRandomHexString);
+            messagesTableManipulatorLogic.AddManipulationArg("@data", GetRandomString);
 
             // long
-            //messagesTableManipulatorLogic.AddManipulationArg("@_id", IdManipulateFunc);
-            messagesTableManipulatorLogic.AddManipulationArg("@timestamp", TimeStampManipulatorFunc);
-            //messagesTableManipulatorLogic.AddManipulationArg("@id", IdManipulateFunc);
-            //messagesTableManipulatorLogic.AddManipulationArg("@price", TimeStampManipulatorFunc);
+            messagesTableManipulatorLogic.AddManipulationArg("@timestamp", GetRandomTimeStamp);
 
             return messagesTableManipulatorLogic;
-        }
-
-        private string KeyIdManipulatorFunc(object value)
-        {
-            if (value == null)
-                return null;
-
-            string valueString = value.ToString();
-            int length = valueString.Length > 16 ? valueString.Length : 16;
-            return RandomString(length, hexValues);
-        }
-
-        private string DataManipulatorFunc(object value)
-        {
-            if (value == null)
-                return null;
-
-            string valueString = value.ToString();
-            return "Random: " + RandomString(valueString.Length, engValues);
-        }
-
-        private long IdManipulateFunc(object value)
-        {
-            long valueInt = (long) value;
-            return valueInt + 620;
-        }
-
-        private long TimeStampManipulatorFunc(object value)
-        {
-            long valueInt = (long)value;
-            return valueInt + random.Next(2000,15000);
-        }
-
-        private static string RandomString(int length, string chars)
-        {
-            var stringChars = new char[length];
-            for (int i = 0; i < stringChars.Length; i++)
-            {
-                stringChars[i] = chars[random.Next(chars.Length)];
-            }
-
-            return new String(stringChars);
         }
     }
 }

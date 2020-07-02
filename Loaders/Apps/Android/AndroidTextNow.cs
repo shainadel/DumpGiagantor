@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Loaders.Apps.Android
+﻿namespace Loaders.Apps.Android
 {
     
     /*
@@ -22,9 +20,6 @@ namespace Loaders.Apps.Android
      */
     public class AndroidTextNow : DbLoader
     {
-        private static Random random = new Random();
-        private const string hexValues = "0123456789ABCDEF";
-        private const string engValues = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
         private TableRecordManipulationLogic _tableRecorsdManipulationLogic;
 
         public void Init()
@@ -46,47 +41,14 @@ namespace Loaders.Apps.Android
         {
             var messagesTableManipulatorLogic = new TableRecordManipulationLogic("messages", "_id", intacts: 500, deletedes: 1);
             
-            messagesTableManipulatorLogic.AddManipulationArg("@message_text", DataManipulatorFunc);
-            //messagesTableManipulatorLogic.AddManipulationArg("@name", DataManipulatorFunc);
+            // string
+            messagesTableManipulatorLogic.AddManipulationArg("@message_text", GetRandomString);
 
             // long
-            //messagesTableManipulatorLogic.AddManipulationArg("@_id", IdManipulateFunc);
-            messagesTableManipulatorLogic.AddManipulationArg("@date", TimeStampManipulatorFunc);
-            messagesTableManipulatorLogic.AddManipulationArg("@message_id", IdManipulatorFunc);
+            messagesTableManipulatorLogic.AddManipulationArg("@date", GetRandomTimeStamp);
+            messagesTableManipulatorLogic.AddManipulationArg("@message_id", GetRandomSuccessiveId);
 
             return messagesTableManipulatorLogic;
-        }
-        
-        private string DataManipulatorFunc(object value)
-        {
-            if (value == null)
-                return null;
-
-            string valueString = value.ToString();
-            return "Random: " + RandomString(valueString.Length, engValues);
-        }
-
-        private long TimeStampManipulatorFunc(object value)
-        {
-            long valueInt = (long)value;
-            return valueInt + random.Next(2000,15000);
-        }
-
-        private long IdManipulatorFunc(object value)
-        {
-            long valueInt = (long)value;
-            return valueInt + random.Next(1000,100000);
-        }
-
-        private static string RandomString(int length, string chars)
-        {
-            var stringChars = new char[length];
-            for (int i = 0; i < stringChars.Length; i++)
-            {
-                stringChars[i] = chars[random.Next(chars.Length)];
-            }
-
-            return new string(stringChars);
         }
     }
 }
