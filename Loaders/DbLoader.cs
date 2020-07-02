@@ -111,6 +111,7 @@ namespace Loaders
         }
         public void PumpTable(TableRecordManipulationLogic tableRecorsdManipulationLogic)
         {
+            
             int numofIntactsPerRecord = tableRecorsdManipulationLogic.Intacts;
             int numofDeletedesPerRecord = tableRecorsdManipulationLogic.Deletedes;
             string tableName = tableRecorsdManipulationLogic.TableName;

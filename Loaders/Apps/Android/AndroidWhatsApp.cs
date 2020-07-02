@@ -56,7 +56,8 @@ namespace Loaders.Apps.Android
         {
             //_zipPath = @"C:\IW3\dumps\Android\WhatsApp\WhatsApp_2.19.360\WhatsApp_2.19.360_Android_7.0.zip";
             //_DBPathInsideZip = @"Root/data/com.whatsapp/databases/msgstore.db";
-            _DBPathInDisk = @"C:\IW3\dumps\Android\WhatsApp\WhatsApp_2.19.360\msgstore.db";
+            //_DBPathInDisk = PUT YOUR LOCAL PATH HERE IF YOU'RE NOT WORKING WITH ZIP AND COMMENT THE 2 LINES ABOVE
+            _DBPathInDisk = @"C:\IW3\dumps\Android\WhatsApp\WhatsApp_2.19.360\db\msgstore.db";
             base.Init();
             _tableRecorsdManipulationLogic = GetRecordManipulationLogic();
         }
